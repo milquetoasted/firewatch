@@ -27,3 +27,47 @@ var behavior = new H.mapevents.Behavior(mapEvents);
 
 var ui = H.ui.UI.createDefault(map, layers);
 
+var options = {
+  enableHighAccuracy: true,
+  maximumAge: 0
+};
+
+var here;
+
+function positionSuccess(pos) {
+  var crd = pos.coords;
+  var ll = {lat:crd.latitude, lng:crd.longitude};
+
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+
+  setTimeout(() => {
+    map.setCenter(ll, true);
+    map.setZoom(4, true);
+    here = new H.map.Marker(ll);
+    map.addObject(here);
+  },1000);
+}
+
+function positionError(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+navigator.geolocation.getCurrentPosition(positionSuccess, positionError, options);
+
+var input = document.getElementById('search');
+var autocomplete = new google.maps.places.Autocomplete(input);
+autocomplete.setFields(['address_components', 'geometry', 'name']);
+
+autocomplete.addListener('place_changed', function() {
+  var crd = autocomplete.getPlace().geometry.location;
+  map.removeObject(here);
+  var ll = {lat:crd.lat(), lng:crd.lng()};
+  console.log(ll);
+  map.setCenter(ll, true);
+  map.setZoom(4, true);
+  here = new H.map.Marker(ll);
+  map.addObject(here);
+});

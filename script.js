@@ -27,7 +27,6 @@ var behavior = new H.mapevents.Behavior(mapEvents);
 
 var ui = H.ui.UI.createDefault(map, layers);
 
-<<<<<<< HEAD
 var options = {
   enableHighAccuracy: true,
   maximumAge: 0
@@ -71,7 +70,8 @@ autocomplete.addListener('place_changed', function() {
   map.setZoom(4, true);
   here = new H.map.Marker(ll);
   map.addObject(here);
-=======
+});
+
 // set up news search api
 
 function searchNews(location) {
@@ -95,5 +95,4 @@ var app = new Vue({
   data: {
     news: []
   }
->>>>>>> alan_features
 });

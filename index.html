@@ -1,4 +1,3 @@
-
 <title>FireWatch</title>
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
@@ -10,15 +9,18 @@ href="http://js.api.here.com/v3/3.0/mapsjs-ui.css">
 <link rel="stylesheet"
 href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
 
-<link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karla">
 
-<style type="text/css"></style>
+<link rel="stylesheet" href="main.css">
 
 <!-- body -->
 
 <div class="container">
   <div class="header">
     <h1><span>Fire</span>Watch</h1>
+    <div class="search">
+      <input id="search" type="text" placeholder="search location">
+    </div>
   </div>
 
   <div class="map">
@@ -40,6 +42,8 @@ type="text/javascript" charset="utf-8"></script>
 
 <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
 type="text/javascript" charset="utf-8"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMkRXwmqpItcwIaQP-MmXJbOlfpLqvMmQ&libraries=places"></script>
 
 
 <!-- custom scripts -->

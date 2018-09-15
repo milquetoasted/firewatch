@@ -14,6 +14,11 @@ body {
   width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat";
+  font-weight: normal;
+}
+
 .header {
   height: 70px;
   width: 100%;
@@ -27,8 +32,6 @@ body {
 }
 
 .header h1 {
-  font-family: "Montserrat";
-  font-weight: normal;
   margin: 0;
 }
 
@@ -75,3 +78,35 @@ body {
 .pac-item{
   padding:5px 15px;
 }
+
+.info {
+  position: absolute;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+}
+
+.news-container {
+  width: 25%;
+  min-width: 300px;
+  height: 100%;
+  padding: 20px 10px;
+  box-sizing: border-box;
+}
+
+.news-header h3 {
+  margin: 0;
+}
+
+.news-header {
+  padding: 10px;
+  box-sizing: border-box;
+  background: #FAFAFA;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.news-tile {
+  background: red;
+}
+
+

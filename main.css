@@ -1,0 +1,46 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased; /* This needs to be set or some font faced fonts look bold on Mac in Chrome/Webkit based browsers. */
+  -moz-osx-font-smoothing: grayscale; /* Fixes font bold issue in Firefox version 25+ on Mac */
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  height: 70px;
+  width: 100%;
+  background: #FAFAFA;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  box-sizing: border-box;
+}
+
+.header h1 {
+  font-family: "Montserrat";
+  font-weight: normal;
+  margin: 0;
+}
+
+.header span {
+  color: #FF5722;
+}
+
+.map {
+  height: calc(100% - 70px);
+  position: relative;
+  z-index: 1;
+}
+
+#mapContainer {
+  width: 100%;
+  height: 100%;
+}

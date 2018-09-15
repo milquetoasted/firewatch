@@ -1,61 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>title</title>
-  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
-  <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
-  type="text/javascript" charset="utf-8"></script>
-  <link rel="stylesheet" type="text/css"
-  href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
+<title>FireWatch</title>
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
-<style type="text/css">
-body{
-  margin:0;padding:0;
-}
+<!-- stylesheets -->
 
-#mapContainer{
-  position:fixed;width:100%;height:100%;
-}
-</style>
-</head>
-<body>
-  <div id="mapContainer"></div>
-  <script>
-    // Initialize the platform object:
-    var platform = new H.service.Platform({
-    'app_id': 'fF1mVXDKnAlRMVVwdHuO',
-    'app_code': 'KyO0DGou-M7uza7g6WGlpQ'
-    });
+<link rel="stylesheet" type="text/css"
+href="http://js.api.here.com/v3/3.0/mapsjs-ui.css">
 
-    // Obtain the default map types from the platform object
-    var layers = platform.createDefaultLayers();
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
 
-    // Instantiate (and display) a map object:
-    var map = new H.Map(
-    document.getElementById('mapContainer'),
-    layers.normal.xbase,
-    {
-      zoom: 3,
-      center: { lng: -100, lat: 40 }
-    });
+<link rel="stylesheet" href="main.css">
 
-    var mapEvents = new H.mapevents.MapEvents(map);
+<style type="text/css"></style>
 
-    map.addEventListener('tap', function(evt) {
-      console.log(evt.type, evt.currentPointer.type);
-    })
+<!-- body -->
 
-    var behavior = new H.mapevents.Behavior(mapEvents);
+<div class="container">
+  <div class="header">
+    <h1><span>Fire</span>Watch</h1>
+  </div>
 
-    var ui = H.ui.UI.createDefault(map, layers);
+  <div class="map">
+    <div id="mapContainer"></div>
+  </div>
+</div>
 
-  </script>
-</body>
-</html>
+
+<!-- scripts -->
+
+<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+type="text/javascript" charset="utf-8"></script>
+
+<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+type="text/javascript" charset="utf-8"></script>
+
+<script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+type="text/javascript" charset="utf-8"></script>
+
+<script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+type="text/javascript" charset="utf-8"></script>
+
+
+<!-- custom scripts -->
+<script src="script.js"></script>

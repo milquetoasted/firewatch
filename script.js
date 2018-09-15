@@ -27,9 +27,27 @@ var behavior = new H.mapevents.Behavior(mapEvents);
 
 var ui = H.ui.UI.createDefault(map, layers);
 
+// set up news search api
+
+function searchNews(location) {
+  var url = 'https://newsapi.org/v2/everything?' +
+  'q=+' + location + ',+forest,+fire&' +
+  'sortBy=popularity&' +
+  'apiKey=83fa8de5555f42179dca7d75e4184d41';
+
+  var req = new Request(url);
+
+  fetch(req)
+    .then(function(response) {
+      console.log(response.json());
+    });
+}
+
+// initialize vue
+
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello Vue!'
+    news: []
   }
 });

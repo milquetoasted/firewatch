@@ -13,6 +13,13 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
 
 <link rel="stylesheet" href="main.css">
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 <!-- body -->
 
 <div class="container">
@@ -20,6 +27,7 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
     <h1><span>Fire</span>Watch</h1>
     <div class="search">
       <input id="search" type="text" placeholder="search location">
+        <button class="open" id="myBtn"><span class="glyphicon glyphicon-bell"></button>
     </div>
   </div>
   <div class="map">
@@ -30,7 +38,6 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
         </div>
         <div class="news">
           <div class="news-tile">
-
           </div>
         </div>
       </div>
@@ -40,8 +47,42 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
   </div>
 </div>
 
-
-
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4> Your Information</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form">
+            <div class="form-group">
+              <label for="usrname"><span class="glyphicon glyphicon-edit"></span> Email</label>
+              <input type="text" class="form-control" id="usrname" placeholder="Enter Email">
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-map-marker"></span> Location</label>
+              <input type="text" class="form-control" id="psw" placeholder="Enter Location">
+            </div>
+              <button type="submit" class="btn btn-success btn-block" id="not"></span>Get Notified!</button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+</div>
+ 
+<script>
+$(document).ready(function(){
+    $("#myBtn").click(function(){
+        $("#myModal").modal();
+    });
+});
+</script>
 
 
 <!-- scripts -->

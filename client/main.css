@@ -56,6 +56,7 @@ h1, h2, h3, h4, h5, h6 {
   transition: all ease-in-out .5s;
 }
 
+
 .map {
   height: calc(100% - 70px);
   padding: 20px;

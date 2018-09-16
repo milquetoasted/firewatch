@@ -1,3 +1,4 @@
+
 // Initialize the platform object:
 var platform = new H.service.Platform({
   'app_id': 'fF1mVXDKnAlRMVVwdHuO',
@@ -119,7 +120,7 @@ autocomplete.addListener('place_changed', function getll () {
   var crd = autocomplete.getPlace().geometry.location;
   map.removeObject(here);
   var ll = { lat: crd.lat(), lng: crd.lng() };
-
+  
   console.log(ll);
   map.setCenter(ll, true);
   map.setZoom(8, true);
@@ -128,16 +129,15 @@ autocomplete.addListener('place_changed', function getll () {
   reverseGeocode(platform, crd.lat() + ',' + crd.lng());
 });
 
-var notifLocation;
-
-var input2 = document.getElementById('psw');
+var input2 = document.getElementById('search2');
 var autocomplete2 = new google.maps.places.Autocomplete(input2);
 autocomplete2.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete2.addListener('place_changed', function () {
   var crd = autocomplete2.getPlace().geometry.location;
-  notifLocation = { lat: crd.lat(), lng: crd.lng() };
-  console.log(notifLocation);
+  map.removeObject(here);
+  var ll = { lat: crd.lat(), lng: crd.lng() };  
+  checkDanger(ll); 
 });
 
 // search for the address of a known location
@@ -225,54 +225,74 @@ var app = new Vue({
 
 $(".open").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
-  $(".pac-container:eq(1)").css("z-index","1203981092383");
 });
 
-$(".modal-header .close").on("click", function(){
-  $("#error").hide();
+//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
+$(".close, .popup-overlay").on("click", function(){
+  $(".popup-overlay, .popup-content").removeClass("active");
 });
 
-// ---- Sending Emails ----
+// ---- Sending Emails ---- 
 emailjs.init("user_Dsmojbc6gL2DzkZs4Bck7");
-
-var address = "";
 
 // Sends email to address
 function sendEmail (address) {
    var template_params = {
        "to_email": address
     }
-
+   
     var service_id = "default_service";
     var template_id = "template_VvOf8Tmd";
     emailjs.send(service_id, template_id, template_params);
+} 
+
+var data = ""; 
+
+function checkDanger(ll) {
+    var myLatitude = ll.lat; 
+    var myLongitude = ll.long; 
+
+    var minDistance = 10; 
+    var dCalculation = Math.pow(minDistance, 2);
+
+    var rows = data.split("\n"); 
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i]; 
+
+        var commaIndex1 = row.indexOf(","); 
+        var commaIndex2 = row.indexOf(",", commaIndex1 + 1); 
+
+        var lat = parseInt(row.slice(0, commaIndex1)); 
+        var long = parseInt(row.slice(commaIndex1 + 1, commaIndex2)); 
+
+        if (Math.pow(lat - myLatitude, 2) + Math.pow(long - myLongitude, 2) < dCalculation) {
+            alert("rip"); 
+            sendEmail("david.scowluga@gmail.com"); 
+            return; 
+        } 
+    }
 }
 
-socket.on("mans not hot", function(data){
-  if(!data) {
-    alert("rip");
-    sendEmail(address);
-  } else {
-    alert("we gucci", data);
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function(){
+  if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+    data = xmlhttp.responseText; 
+    
   }
-  reverseGeocode(platform, notifLocation.lat + ',' + notifLocation.lng);
-})
+};
+xmlhttp.open("GET","http://localhost:3000/data.csv", true);
+xmlhttp.send();
 
-function submitForm(e){
-  address = $("#usrname")[0].value;
-  if(notifLocation && address) {
-    $("#error").hide();
-    $('#myModal').modal('hide');
-    console.log(notifLocation);
-    map.removeObject(here);
-    map.setCenter(notifLocation, true);
-    map.setZoom(8, true);
-    here = new H.map.Marker(notifLocation);
-    map.addObject(here);
-    socket.emit('am i dead', notifLocation);
-  }
-  else {
-    $("#error").show();
-  }
-  return false;
-}
+$('#not').on("click", function(){
+    var geocoder = platform.getGeocodingService(); 
+    var parameters = {
+      searchtext: search2.value,
+      gen: '9'};
+  geocoder.geocode(parameters,
+    function (result) {
+      
+      alert("ya"); 
+    }, function (error) {
+      alert(error);
+    }); 
+});

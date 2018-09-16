@@ -70,16 +70,21 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
           <h4> Your Information</h4>
         </div>
         <div class="modal-body" style="padding:40px 50px;">
-          <form role="form">
+          <form role="form" onsubmit="submitForm();return false;">
             <div class="form-group">
               <label for="usrname"><span class="glyphicon glyphicon-edit"></span> Email</label>
               <input type="text" class="form-control" id="usrname" placeholder="Enter Email">
             </div>
-            <div class="form-group" style="z-index: 1203981092381; ">
+            <div class="form-group">
               <label for="psw"><span class="glyphicon glyphicon-map-marker"></span> Location</label>
-                <div class = "search2"><input id="search2" type="text" class="form-control" placeholder="Enter Location"></div>
+              <input type="text" class="form-control" id="psw" placeholder="Enter Location">
             </div>
+<<<<<<< HEAD
               <button type="submit" class="btn btn-success btn-block" id="not"></span>Get Notified!</button>
+=======
+            <div id="error" class="alert alert-danger" role="alert" style="display:none;">Please enter required fields</div>
+            <button type="submit" class="btn btn-success btn-block" id="not"></span>Get Notified!</button>
+>>>>>>> a3e9e5a988eaf3518e9b01e3f49d3ccf88c2253a
           </form>
         </div>
       </div>

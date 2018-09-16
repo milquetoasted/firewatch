@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 15px;
   font-family: "Karla";
   text-overflow: ellipsis;
-    
+
 }
 
 #search:focus{
@@ -83,8 +83,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .info {
   position: absolute;
+  top:50%;
   z-index: 2;
   width: 0;
+  transform:translateY(-50%);
 }
 
 .news-container {
@@ -109,8 +111,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .news {
-  height: 65vh;
-  overflow: scroll;
+  height:auto;
+  max-height: 65vh;
+  overflow-y: auto;
   padding: 0 10px 15px 10px;
   box-sizing: border-box;
   background: #FFFFFF;
@@ -176,7 +179,7 @@ button{
   font-size: 1rem;
   color:#666666;
   background:   #ffffff;
-  border:1px solid #666666;  
+  border:1px solid #666666;
   width: 40px;
   height: 40px;
 }
@@ -186,5 +189,3 @@ button:hover{
   background:#666666;
   color:#ffffff;
 }
-
-

@@ -10,22 +10,21 @@ var layers = platform.createDefaultLayers();
 
 // Instantiate (and display) a map object:
 var map = new H.Map(
-  document.getElementById('mapContainer'),
-  layers.normal.xbase,
-  {
-    zoom: 5,
-    center: { lng: -100, lat: 40 }
-  });
+document.getElementById('mapContainer'),
+layers.normal.map,
+{
+  zoom: 3,
+  center: { lng: -100, lat: 40 }
+});
 
 var mapEvents = new H.mapevents.MapEvents(map);
 
-map.addEventListener('tap', function (evt) {
-  console.log(evt.type, evt.currentPointer.type);
-});
+map.addEventListener('tap', function(evt) {});
 
 var behavior = new H.mapevents.Behavior(mapEvents);
 
 var ui = H.ui.UI.createDefault(map, layers);
+ui.getControl('mapsettings').setVisibility(false);
 
 function startClustering(map, data) {
   // First we need to create an array of DataPoint objects,
@@ -40,9 +39,9 @@ function startClustering(map, data) {
   var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
     clusteringOptions: {
       // Maximum radius of the neighbourhood
-      //eps: 32,
+      eps: 32,
       // minimum weight of points required to form a cluster
-      //minWeight: 2
+      minWeight: 2
     }
   });
 
@@ -52,6 +51,20 @@ function startClustering(map, data) {
   // To make objects from clustering provder visible,
   // we need to add our layer to the map
   map.addLayer(clusteringLayer);
+
+  // Add an event listener to the Provider
+  clusteredDataProvider.addEventListener('pointerenter', function(e) {
+    document.body.style.cursor = "pointer";
+  });
+  clusteredDataProvider.addEventListener('tap', function(e) {
+    // Log data bound to the marker that has been tapped:
+    crd = e.target.b;
+    console.log(crd);
+    map.removeObject(here);
+    here = new H.map.Marker({lat:crd.lat, lng:crd.lng});
+    map.addObject(here);
+    reverseGeocode(platform, crd.lat + ',' + crd.lng);
+  });
 }
 
 var socket = io();
@@ -214,7 +227,7 @@ $(".open").on("click", function(){
   $(".popup-overlay, .popup-content").addClass("active");
 });
 
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked 
+//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
 $(".close, .popup-overlay").on("click", function(){
   $(".popup-overlay, .popup-content").removeClass("active");
 });
@@ -283,4 +296,3 @@ $('#not').on("click", function(){
       alert(error);
     }); 
 });
-    

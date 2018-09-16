@@ -11,7 +11,7 @@ var layers = platform.createDefaultLayers();
 // Instantiate (and display) a map object:
 var map = new H.Map(
 document.getElementById('mapContainer'),
-layers.normal.xbase,
+layers.normal.map,
 {
   zoom: 3,
   center: { lng: -100, lat: 40 }

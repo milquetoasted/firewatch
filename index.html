@@ -31,15 +31,20 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
       <img src="icon.svg" alt="fire icon">
       <h1><span>Fire</span>Watch</h1>
       <div class="search">
+        <div class="function-toggle" v-on:click="toggleFunction()" id="headerApp"
+            v-bind:class="{routing: routing}">
+          <span v-if="routing">View Local News</span>
+          <span v-if="!routing">Show Evacuation Centers</span>
+        </div>
         <input id="search" type="text" placeholder="search location">
-          <button class="open" id="myBtn"><span class="glyphicon glyphicon-bell"></button>
+        <button class="open" id="myBtn"><span class="glyphicon glyphicon-bell"></button>
       </div>
     </div>
   </transition>
   <div class="map">
     <div class="info" id="app">
       <transition name="fade">
-        <div class="news-container" v-if="location">
+        <div class="news-container" v-if="location && !routing">
           <div class="news-header">
             <h3>News in {{ location }}</h3>
           </div>
@@ -50,6 +55,18 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
             </div>
             <div v-if="news.length === 0">
               <p>There are no news articles about local fires right now.</p>
+            </div>
+          </div>
+        </div>
+        <div class="news-container" v-if="routing && location && doneLoading">
+          <div class="news-header">
+            <h3>Evacuation Centers near {{ location }}</h3>
+          </div>
+          <div class="news" id="evacuationCentersID">
+            <div class="news-tile" v-for="(evacuationCenter, index) in getNearbyCenters()"
+                v-bind:class="{selected: index === selectedCenter}">
+              <a v-on:click="setDestination(index)">{{ evacuationCenter.SHELTER_NAME }}</a>
+              <p><em>{{ evacuationCenter.DISTANCE }}km - {{ evacuationCenter.ADDRESS }}</em></p>
             </div>
           </div>
         </div>
@@ -123,4 +140,5 @@ type="text/javascript" charset="utf-8"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <!-- custom scripts -->
+<script src="evacuationCenters.js"></script>
 <script src="script.js"></script>

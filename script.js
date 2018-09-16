@@ -273,7 +273,7 @@ function addDomMarker(map) {
     });
     evacuationMarkers.push(evacuationCenterMarker);
     map.addObject(evacuationCenterMarker);
-  } 
+  }
 }
 
 evacuationMarkers = [];
@@ -376,7 +376,7 @@ autocomplete.addListener('place_changed', function getll () {
 var notifLocation;
 
 var input2 = document.getElementById('psw');
-var autocomplete2 = new google.maps.places.Autocomplete(input2);
+var autocomplete2 = new google.maps.places.Autocomplete(search2);
 autocomplete2.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete2.addListener('place_changed', function () {
@@ -549,7 +549,7 @@ var app = new Vue({
         function(error) {
           alert(error.message);
         });
-      
+
       var container = this.$el.querySelector('#evacuationCentersID');
       container.scrollTop = 0;
     }

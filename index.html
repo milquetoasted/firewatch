@@ -53,7 +53,7 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
               <a v-bind:href="article.url" target="_blank">{{ article.title }}</a>
               <p><em>{{ article.source.name }}</em></p>
             </div>
-            <div v-if="news.length === 0">
+            <div class="news-tile" v-if="news.length === 0">
               <p>There are no news articles about local fires right now.</p>
             </div>
           </div>

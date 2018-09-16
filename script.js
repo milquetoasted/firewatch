@@ -17,7 +17,7 @@ layers.normal.map,
   center: { lng: -100, lat: 40 }
 });
 
-const LEFT_PADDING = 5;
+const LEFT_PADDING = 10;
 
 var mapEvents = new H.mapevents.MapEvents(map);
 
@@ -62,10 +62,20 @@ function startClustering(map, data) {
     // Log data bound to the marker that has been tapped:
     crd = e.target.b;
     console.log(crd);
-    map.removeObject(here);
+    here.setVisibility(false);
     here = new H.map.Marker({lat:crd.lat, lng:crd.lng});
     map.addObject(here);
+    calculateDistance(here, 'K');
     reverseGeocode(platform, crd.lat + ',' + crd.lng);
+
+    if (destination) {
+      destination.setVisibility(false);
+    }
+    if (routeLine) {
+      routeLine.setVisibility(false);
+    }
+
+    app.selectedCenter = -1;
   });
 }
 
@@ -215,6 +225,7 @@ function addDomMarker(map) {
       if (routeLine) {
         routeLine.setVisibility(false);
       }
+      app.selectedCenter = -1;
       destination = new H.map.DomMarker(coords, {zIndex: 99999});
 
       var selectedIndex = 0;
@@ -362,8 +373,16 @@ autocomplete.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete.addListener('place_changed', function getll () {
   var crd = autocomplete.getPlace().geometry.location;
-  map.removeObject(here);
+  here.setVisibility(false);
   var ll = { lat: crd.lat(), lng: crd.lng() };
+
+  if (destination) {
+    destination.setVisibility(false);
+  }
+  if (routeLine) {
+    routeLine.setVisibility(false);
+  }
+  app.selectedCenter = -1;
   
   console.log(ll);
   map.setCenter(ll, true);
@@ -380,7 +399,7 @@ autocomplete2.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete2.addListener('place_changed', function () {
   var crd = autocomplete2.getPlace().geometry.location;
-  map.removeObject(here);
+  here.setVisibility(false);
   var ll = { lat: crd.lat(), lng: crd.lng() };  
   checkDanger(ll); 
 });
@@ -503,6 +522,7 @@ var app = new Vue({
       if (routeLine) {
         routeLine.setVisibility(false);
       }
+      app.selectedCenter = -1;
       destination = new H.map.DomMarker(coords, {zIndex: 99999});
 
       this.selectedCenter = newIndex;

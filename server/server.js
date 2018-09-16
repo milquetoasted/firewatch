@@ -2,7 +2,7 @@
 var express = require('express');
 var http = require('http');
 const request = require('request');
-const parse = require('csv-parse')
+const parse = require('csv-parse');
 
 var app = express();
 var server = http.createServer(app);

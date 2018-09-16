@@ -228,8 +228,14 @@ $(".open").on("click", function(){
   $(".pac-container:eq(1)").css("z-index","1203981092383");
 });
 
+$(".modal-header .close").on("click", function(){
+  $("#error").hide();
+});
+
 // ---- Sending Emails ----
 emailjs.init("user_Dsmojbc6gL2DzkZs4Bck7");
+
+var address = "";
 
 // Sends email to address
 function sendEmail (address) {
@@ -245,7 +251,7 @@ function sendEmail (address) {
 socket.on("mans not hot", function(data){
   if(!data) {
     alert("rip");
-    sendEmail("david.scowluga@gmail.com");
+    sendEmail(address);
   } else {
     alert("we gucci", data);
   }
@@ -253,8 +259,10 @@ socket.on("mans not hot", function(data){
 })
 
 function submitForm(e){
-  $('#myModal').modal('hide');
-  if(notifLocation) {
+  address = $("#usrname")[0].value;
+  if(notifLocation && address) {
+    $("#error").hide();
+    $('#myModal').modal('hide');
     console.log(notifLocation);
     map.removeObject(here);
     map.setCenter(notifLocation, true);
@@ -262,6 +270,9 @@ function submitForm(e){
     here = new H.map.Marker(notifLocation);
     map.addObject(here);
     socket.emit('am i dead', notifLocation);
+  }
+  else {
+    $("#error").show();
   }
   return false;
 }

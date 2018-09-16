@@ -24,16 +24,22 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
   </div>
   <div class="map">
     <div class="info" id="app">
-      <div class="news-container">
-        <div class="news-header">
-          <h3>Local News</h3>
-        </div>
-        <div class="news">
-          <div class="news-tile">
-
+      <transition name="fade">
+        <div class="news-container" v-if="location">
+          <div class="news-header">
+            <h3>Local News in {{ location }}</h3>
+          </div>
+          <div class="news">
+            <div class="news-tile" v-for="article in news">
+              <a v-bind:href="article.url" target="_blank">{{ article.title }}</a>
+              <p><em>{{ article.source.name }}</em></p>
+            </div>
+            <div v-if="news.length === 0">
+              <p>There are no news articles about local fires right now.</p>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
 
     <div id="mapContainer"></div>

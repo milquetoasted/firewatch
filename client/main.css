@@ -78,21 +78,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .pac-item{
-  padding:5px 15px;
+  padding: 5px 15px;
 }
 
 .info {
   position: absolute;
   z-index: 2;
-  width: 100%;
+  width: 0;
 }
 
 .news-container {
-  width: 25%;
+  width: 25vw;
   min-width: 300px;
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
+  position: relative;
+  display: inline-block;
 }
 
 .news-header h3 {
@@ -102,12 +104,48 @@ h1, h2, h3, h4, h5, h6 {
 .news-header {
   padding: 10px;
   box-sizing: border-box;
-  background: #FAFAFA;
+  background: #FFFFFF;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.news {
+  height: 65vh;
+  overflow: scroll;
+  padding: 0 10px 15px 10px;
+  box-sizing: border-box;
+  background: #FFFFFF;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .news-tile {
-  background: red;
+  background: #FFFFFF;
+  margin-top: 15px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.news-tile a {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.news-tile a:hover {
+  text-decoration: underline;
+}
+
+.news-tile p {
+  color: #777;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1.5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 

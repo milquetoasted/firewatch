@@ -1,8 +1,8 @@
 
 // Initialize the platform object:
 var platform = new H.service.Platform({
-'app_id': 'fF1mVXDKnAlRMVVwdHuO',
-'app_code': 'KyO0DGou-M7uza7g6WGlpQ'
+  'app_id': 'fF1mVXDKnAlRMVVwdHuO',
+  'app_code': 'KyO0DGou-M7uza7g6WGlpQ'
 });
 
 // Obtain the default map types from the platform object
@@ -10,16 +10,16 @@ var layers = platform.createDefaultLayers();
 
 // Instantiate (and display) a map object:
 var map = new H.Map(
-document.getElementById('mapContainer'),
-layers.normal.xbase,
-{
-  zoom: 3,
-  center: { lng: -100, lat: 40 }
-});
+  document.getElementById('mapContainer'),
+  layers.normal.xbase,
+  {
+    zoom: 5,
+    center: { lng: -100, lat: 40 }
+  });
 
 var mapEvents = new H.mapevents.MapEvents(map);
 
-map.addEventListener('tap', function(evt) {
+map.addEventListener('tap', function (evt) {
   console.log(evt.type, evt.currentPointer.type);
 });
 
@@ -62,14 +62,21 @@ socket.on('oh no', function(data) {
 
 var options = {
   enableHighAccuracy: true,
+  zoom: 5,
   maximumAge: 0
 };
+
+// Show traffic tiles
+map.setBaseLayer(layers.normal.traffic);
+
+// Enable traffic incidents layer
+map.addLayer(layers.incidents);
 
 var here;
 
 function positionSuccess(pos) {
   var crd = pos.coords;
-  var ll = {lat:crd.latitude, lng:crd.longitude};
+  var ll = { lat: crd.latitude, lng: crd.longitude };
 
   console.log('Your current position is:');
   console.log(`Latitude : ${crd.latitude}`);
@@ -78,46 +85,105 @@ function positionSuccess(pos) {
 
   setTimeout(() => {
     map.setCenter(ll, true);
-    map.setZoom(4, true);
+    map.setZoom(8, true);
     here = new H.map.Marker(ll);
     map.addObject(here);
-  },1000);
+    reverseGeocode(platform, crd.latitude + ',' + crd.longitude);
+  }, 1000);
 }
 
 function positionError(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+console.log('GETTING POSITION');
 navigator.geolocation.getCurrentPosition(positionSuccess, positionError, options);
 
 var input = document.getElementById('search');
 var autocomplete = new google.maps.places.Autocomplete(input);
 autocomplete.setFields(['address_components', 'geometry', 'name']);
 
-autocomplete.addListener('place_changed', function() {
+autocomplete.addListener('place_changed', function () {
   var crd = autocomplete.getPlace().geometry.location;
   map.removeObject(here);
-  var ll = {lat:crd.lat(), lng:crd.lng()};
+  var ll = { lat: crd.lat(), lng: crd.lng() };
   console.log(ll);
   map.setCenter(ll, true);
-  map.setZoom(4, true);
+  map.setZoom(8, true);
   here = new H.map.Marker(ll);
   map.addObject(here);
+  reverseGeocode(platform, crd.lat() + ',' + crd.lng());
 });
+
+// search for the address of a known location
+
+/**
+ * Calculates and displays the address details of the location found at
+ * a specified location in Berlin (52.5309°N 13.3847°E) using a 150 meter
+ * radius to retrieve the address of Nokia House. The expected address is:
+ * Invalidenstraße 116, 10115 Berlin.
+ *
+ *
+ * A full list of available request parameters can be found in the Geocoder API documentation.
+ * see: http://developer.here.com/rest-apis/documentation/geocoder/topics/resource-reverse-geocode.html
+ *
+ * @param   {H.service.Platform} platform    A stub class to access HERE services
+ */
+function reverseGeocode(platform, prox) {
+  var geocoder = platform.getGeocodingService(),
+    reverseGeocodingParameters = {
+      prox: prox,
+      mode: 'retrieveAddresses',
+      maxresults: '1',
+      jsonattributes : 1
+    };
+
+  geocoder.reverseGeocode(
+    reverseGeocodingParameters,
+    onSuccess,
+    onError
+  );
+}
+
+/**
+ * This function will be called once the Geocoder REST API provides a response
+ * @param  {Object} result          A JSONP object representing the  location(s) found.
+ *
+ * see: http://developer.here.com/rest-apis/documentation/geocoder/topics/resource-type-response-geocode.html
+ */
+function onSuccess(result) {
+  var locations = result.response.view[0].result;
+  app.city = locations[0].location.address.city;
+  app.location = locations[0].location.address.city + ', ' + locations[0].location.address.state;
+  searchNews(app.city);
+}
+
+/**
+ * This function will be called if a communication error occurs during the JSON-P request
+ * @param  {Object} error  The error message received.
+ */
+function onError(error) {
+  alert('Ooops!');
+}
 
 // set up news search api
 
 function searchNews(location) {
   var url = 'https://newsapi.org/v2/everything?' +
-  'q=+' + location + ',+forest,+fire&' +
-  'sortBy=popularity&' +
-  'apiKey=83fa8de5555f42179dca7d75e4184d41';
+    'q=+' + location + ' AND +forest AND +fire AND +wildfire&' +
+    'excludeDomains=smartbitchestrashybooks.com,stltoday.com,gamasutra.com,newyorker.com,hakaimagazine.com,seekingalpha.com,thepointsguy.com&' +
+    // 'from=2018-09-1&' +
+    'sortBy=relevancy&' +
+    'apiKey=83fa8de5555f42179dca7d75e4184d41';
 
   var req = new Request(url);
 
   fetch(req)
-    .then(function(response) {
-      console.log(response.json());
+    .then(function (response) {
+      return response.json();
+    }).then(function(data) {
+      app.news = data.articles;
+      console.log(app.news);
     });
 }
 
@@ -126,6 +192,8 @@ function searchNews(location) {
 var app = new Vue({
   el: '#app',
   data: {
+    city: '',
+    location: '',
     news: []
   }
 });

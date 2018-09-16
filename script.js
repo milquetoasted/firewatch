@@ -61,7 +61,7 @@ function startClustering(map, data) {
     // Log data bound to the marker that has been tapped:
     crd = e.target.b;
     console.log(crd);
-    map.removeObject(here);
+    here.setVisibility(false);
     here = new H.map.Marker({lat:crd.lat, lng:crd.lng});
     map.addObject(here);
     reverseGeocode(platform, crd.lat + ',' + crd.lng);
@@ -361,7 +361,7 @@ autocomplete.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete.addListener('place_changed', function getll () {
   var crd = autocomplete.getPlace().geometry.location;
-  map.removeObject(here);
+  here.setVisibility(false);
   var ll = { lat: crd.lat(), lng: crd.lng() };
 
   console.log(ll);
@@ -610,7 +610,7 @@ function submitForm(e){
     $("#error").hide();
     $('#myModal').modal('hide');
     console.log(notifLocation);
-    map.removeObject(here);
+    here.setVisibility(false);
     map.setCenter(notifLocation, true);
     map.setZoom(8, true);
     here = new H.map.Marker(notifLocation);

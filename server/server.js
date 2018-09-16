@@ -62,6 +62,10 @@ var updateClient = function(data) {
   io.sockets.emit('oh no', data);
 };
 
+var updateStatus = function(data) {
+  io.sockets.emit('mans not hot', data);
+};
+
 server.listen(3000, function () {
   console.log('server running on port 3000');
 });

@@ -9,7 +9,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 // serve static public files
-app.use(express.static('../client'));
+app.use(express.static('..'));
 
 io.on('connection', function(socket){
   socket.on('lit fam', function(){

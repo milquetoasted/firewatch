@@ -129,14 +129,57 @@ autocomplete.addListener('place_changed', function getll () {
   reverseGeocode(platform, crd.lat() + ',' + crd.lng());
 });
 
+
+// Sends email to address
+function sendEmail (address) {
+    emailjs.init("user_Dsmojbc6gL2DzkZs4Bck7");
+   var template_params = {
+       "to_email": "david.scowluga@gmail.com"
+    }
+   
+    var service_id = "default_service";
+    var template_id = "template_VvOf8Tmd";
+    emailjs.send(service_id, template_id, template_params);
+    alert("email sent"); 
+} 
+
+var data = ""; 
+
+function checkDanger(ll) {
+    var myLatitude = ll.lat; 
+    var myLongitude = ll.lng; 
+
+    var minDistance = 100; 
+    var dCalculation = Math.pow(minDistance, 2);
+
+    var rows = data.split("\n"); 
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i]; 
+
+        var commaIndex1 = row.indexOf(","); 
+        var commaIndex2 = row.indexOf(",", commaIndex1 + 1); 
+
+        var lat = parseInt(row.slice(0, commaIndex1)); 
+        var long = parseInt(row.slice(commaIndex1 + 1, commaIndex2)); 
+
+        if (Math.pow(lat - myLatitude, 2) + Math.pow(long - myLongitude, 2) < dCalculation) {
+            alert("rip"); 
+            sendEmail("david.scowluga@gmail.com"); 
+            return; 
+        } 
+    }
+}
+
+
 var input2 = document.getElementById('search2');
 var autocomplete2 = new google.maps.places.Autocomplete(input2);
 autocomplete2.setFields(['address_components', 'geometry', 'name']);
 
 autocomplete2.addListener('place_changed', function () {
   var crd = autocomplete2.getPlace().geometry.location;
-  map.removeObject(here);
+    console.log("REEEEE:" + crd); 
   var ll = { lat: crd.lat(), lng: crd.lng() };  
+    console.log("RE: " + ll); 
   checkDanger(ll); 
 });
 
@@ -233,45 +276,8 @@ $(".close, .popup-overlay").on("click", function(){
 });
 
 // ---- Sending Emails ---- 
-emailjs.init("user_Dsmojbc6gL2DzkZs4Bck7");
 
-// Sends email to address
-function sendEmail (address) {
-   var template_params = {
-       "to_email": address
-    }
-   
-    var service_id = "default_service";
-    var template_id = "template_VvOf8Tmd";
-    emailjs.send(service_id, template_id, template_params);
-} 
 
-var data = ""; 
-
-function checkDanger(ll) {
-    var myLatitude = ll.lat; 
-    var myLongitude = ll.long; 
-
-    var minDistance = 10; 
-    var dCalculation = Math.pow(minDistance, 2);
-
-    var rows = data.split("\n"); 
-    for (var i = 1; i < rows.length; i++) {
-        var row = rows[i]; 
-
-        var commaIndex1 = row.indexOf(","); 
-        var commaIndex2 = row.indexOf(",", commaIndex1 + 1); 
-
-        var lat = parseInt(row.slice(0, commaIndex1)); 
-        var long = parseInt(row.slice(commaIndex1 + 1, commaIndex2)); 
-
-        if (Math.pow(lat - myLatitude, 2) + Math.pow(long - myLongitude, 2) < dCalculation) {
-            alert("rip"); 
-            sendEmail("david.scowluga@gmail.com"); 
-            return; 
-        } 
-    }
-}
 
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function(){
@@ -290,8 +296,7 @@ $('#not').on("click", function(){
       gen: '9'};
   geocoder.geocode(parameters,
     function (result) {
-      
-      alert("ya"); 
+      console.log("REE: " + result); 
     }, function (error) {
       alert(error);
     }); 

@@ -14,6 +14,11 @@ body {
   width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat",Open Sans;
+  font-weight: normal;
+}
+
 .header {
   height: 70px;
   width: 100%;
@@ -27,7 +32,6 @@ body {
 }
 
 .header h1 {
-  font-family:"Montserrat";
   margin: 0;
   letter-spacing:1px;
 }
@@ -44,7 +48,7 @@ body {
   padding: 15px;
   font-family: "Karla";
   text-overflow: ellipsis;
-  margin-right:10px;
+
 }
 
 #search:focus{
@@ -52,6 +56,7 @@ body {
   background: #fff;
   transition: all ease-in-out .5s;
 }
+
 
 .map {
   height: calc(100% - 70px);

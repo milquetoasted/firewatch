@@ -1,3 +1,3 @@
 # htn2018
 
-mans not hot
+mans not hot, unfortunately

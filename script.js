@@ -250,10 +250,10 @@ function sendEmail (address) {
 
 socket.on("mans not hot", function(data){
   if(!data) {
-    //alert("rip");
+    alert("Check for nearby fires on the map");
     sendEmail(address);
   } else {
-    //alert("we gucci", data);
+    alert("You are not currently near any fires");
   }
   reverseGeocode(platform, notifLocation.lat + ',' + notifLocation.lng);
 })

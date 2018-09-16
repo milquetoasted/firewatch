@@ -25,14 +25,16 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
 <!-- body -->
 
 <div class="container">
-  <div class="header">
-    <img src="icon.svg" alt="fire icon">
-    <h1><span>Fire</span>Watch</h1>
-    <div class="search">
-      <input id="search" type="text" placeholder="search location">
-        <button class="open" id="myBtn"><span class="glyphicon glyphicon-bell"></button>
+  <transition name="fade">
+    <div class="header">
+      <img src="icon.svg" alt="fire icon">
+      <h1><span>Fire</span>Watch</h1>
+      <div class="search">
+        <input id="search" type="text" placeholder="search location">
+          <button class="open" id="myBtn"><span class="glyphicon glyphicon-bell"></button>
+      </div>
     </div>
-  </div>
+  </transition>
   <div class="map">
     <div class="info" id="app">
       <transition name="fade">
@@ -60,7 +62,7 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header" style="padding:35px 50px;">
@@ -81,11 +83,11 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
           </form>
         </div>
       </div>
-      
+
     </div>
-  </div> 
+  </div>
 </div>
- 
+
 <script>
 $(document).ready(function(){
     $("#myBtn").click(function(){

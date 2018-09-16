@@ -27,6 +27,39 @@ var behavior = new H.mapevents.Behavior(mapEvents);
 
 var ui = H.ui.UI.createDefault(map, layers);
 
+function startClustering(map, data) {
+  // First we need to create an array of DataPoint objects,
+  // for the ClusterProvider
+  var dataPoints = data.map(function (item) {
+    return new H.clustering.DataPoint(item[0], item[1]);
+  });
+
+  console.log(dataPoints);
+
+  // Create a clustering provider with custom options for clusterizing the input
+  var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
+    clusteringOptions: {
+      // Maximum radius of the neighbourhood
+      //eps: 32,
+      // minimum weight of points required to form a cluster
+      //minWeight: 2
+    }
+  });
+
+  // Create a layer tha will consume objects from our clustering provider
+  var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+
+  // To make objects from clustering provder visible,
+  // we need to add our layer to the map
+  map.addLayer(clusteringLayer);
+}
+
+var socket = io();
+socket.emit('lit fam');
+socket.on('oh no', function(data) {
+  startClustering(map, data);
+});
+
 var options = {
   enableHighAccuracy: true,
   maximumAge: 0

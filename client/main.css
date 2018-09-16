@@ -14,11 +14,6 @@ body {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Montserrat",Open Sans;
-  font-weight: normal;
-}
-
 .header {
   height: 70px;
   width: 100%;
@@ -32,6 +27,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .header h1 {
+  font-family:"Montserrat";
   margin: 0;
   letter-spacing:1px;
 }
@@ -48,7 +44,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 15px;
   font-family: "Karla";
   text-overflow: ellipsis;
-
+  margin-right:10px;
 }
 
 #search:focus{

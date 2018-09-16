@@ -228,11 +228,6 @@ $(".open").on("click", function(){
   $(".pac-container:eq(1)").css("z-index","1203981092383");
 });
 
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked
-$(".close, .popup-overlay").on("click", function(){
-  $(".popup-overlay, .popup-content").removeClass("active");
-});
-
 // ---- Sending Emails ----
 emailjs.init("user_Dsmojbc6gL2DzkZs4Bck7");
 
@@ -254,11 +249,18 @@ socket.on("mans not hot", function(data){
   } else {
     alert("we gucci", data);
   }
+  reverseGeocode(platform, notifLocation.lat + ',' + notifLocation.lng);
 })
 
 function submitForm(e){
+  $('#myModal').modal('hide');
   if(notifLocation) {
     console.log(notifLocation);
+    map.removeObject(here);
+    map.setCenter(notifLocation, true);
+    map.setZoom(8, true);
+    here = new H.map.Marker(notifLocation);
+    map.addObject(here);
     socket.emit('am i dead', notifLocation);
   }
   return false;

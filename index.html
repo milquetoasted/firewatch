@@ -21,6 +21,7 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.2.4/email.min.js"></script>
 
 <!-- body -->
 
@@ -40,7 +41,7 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
       <transition name="fade">
         <div class="news-container" v-if="location">
           <div class="news-header">
-            <h3>Local News in {{ location }}</h3>
+            <h3>News in {{ location }}</h3>
           </div>
           <div class="news">
             <div class="news-tile" v-for="article in news">
@@ -75,11 +76,11 @@ href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">
               <label for="usrname"><span class="glyphicon glyphicon-edit"></span> Email</label>
               <input type="text" class="form-control" id="usrname" placeholder="Enter Email">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="z-index: 1203981092381; ">
               <label for="psw"><span class="glyphicon glyphicon-map-marker"></span> Location</label>
-              <input type="text" class="form-control" id="psw" placeholder="Enter Location">
+                <div class = "search2"><input id="search2" type="text" class="form-control" placeholder="Enter Location"></div>
             </div>
-              <button type="submit" class="btn btn-success btn-block" id="not"></span>Get Notified!</button>
+              <button type="submit" onclick="sendEmail("usrname");" class="btn btn-success btn-block" id="not"></span>Get Notified!</button>
           </form>
         </div>
       </div>

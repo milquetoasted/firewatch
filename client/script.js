@@ -58,7 +58,12 @@ function startClustering(map, data) {
   });
   clusteredDataProvider.addEventListener('tap', function(e) {
     // Log data bound to the marker that has been tapped:
-    console.log(e.target.b)
+    crd = e.target.b;
+    console.log(crd);
+    map.removeObject(here);
+    here = new H.map.Marker({lat:crd.lat, lng:crd.lng});
+    map.addObject(here);
+    reverseGeocode(platform, crd.lat + ',' + crd.lng);
   });
 }
 

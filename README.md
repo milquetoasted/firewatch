@@ -1,3 +1,5 @@
-# htn2018
+# FireWatch - Hack the North 2018
 
-mans not hot
+An app to track forest fires and give evacuation data to citizens around the world.
+
+Check out a video demo here: https://youtu.be/WssjXFk-dmU

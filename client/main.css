@@ -31,8 +31,14 @@ h1, h2, h3, h4, h5, h6 {
   box-sizing: border-box;
 }
 
+.header img {
+  height: 50px;
+}
+
 .header h1 {
   margin: 0;
+  margin-right: auto;
+  margin-left: 15px;
 }
 
 .header span {
@@ -43,11 +49,11 @@ h1, h2, h3, h4, h5, h6 {
   width: 300px;
   border: none;
   border-radius: 5px;
-  background: #FAFAFA;
+  background: #F0F0F0;
   padding: 15px;
   font-family: "Karla";
   text-overflow: ellipsis;
-    
+  margin-right: 10px;
 }
 
 #search:focus{

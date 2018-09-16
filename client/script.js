@@ -88,6 +88,35 @@ function searchNews(location) {
     });
 }
 
+function loadKMLFile() {
+  var kml = new nokia.maps.kml.Manager();
+  // We define a callback function for parsing kml file,
+  // and then push the parsing result to map display
+  // Add an observer to kml manager
+  kml.addObserver("state", onKMLParsed);
+  kml.parseKML("data/local.kml");
+}
+function onKMLParsed(kmlManager) {
+  var resultSet;
+  // KML file was successfully loaded
+  if (kmlManager.state === "finished") {
+    // KML file was successfully parsed
+    resultSet = new nokia.maps.kml.component.KMLResultSet(kmlManager.kmlDocument, map);
+    resultSet.addObserver("state", function (resultSet) {
+      if (resultSet.state === "finished") {
+        // Retrieve map objects container from KML resultSet
+        container = resultSet.container;
+
+        // Add the container to the map's object collection so they will be rendered onto the map.
+        map.objects.add(container);
+
+        // Switch the viewport of the map do show all KML map objects within the container
+        map.zoomTo(container.getBoundingBox());
+      }
+    });
+    resultSet.create();
+  }
+}
 // initialize vue
 
 var app = new Vue({

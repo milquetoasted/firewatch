@@ -148,4 +148,43 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
+.modal-header, h4, .close {
+      background-color: #cd5c5c;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+      font-weight:bold;
+  }
+
+.modal-footer {
+      background-color: #f9f9f9;
+  }
+
+#not {
+    background-color: #cd5c5c;
+    font-size: 15px;
+    font-weight:bold;
+    border-color: #cd5c5c;
+}
+
+
+button{
+  display:inline-block;
+  vertical-align:middle;
+  border-radius:30px;
+  margin:.20rem;
+  font-size: 1rem;
+  color:#666666;
+  background:   #ffffff;
+  border:1px solid #666666;  
+  width: 40px;
+  height: 40px;
+}
+
+button:hover{
+  border:1px solid #666666;
+  background:#666666;
+  color:#ffffff;
+}
+
 

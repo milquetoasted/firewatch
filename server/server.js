@@ -2,7 +2,7 @@
 var express = require('express');
 var http = require('http');
 const request = require('request');
-const parse = require('csv-parse')
+const parse = require('csv-parse');
 
 var app = express();
 var server = http.createServer(app);
@@ -61,10 +61,6 @@ io.on('connection', function(socket){
 var updateClient = function(data) {
   io.sockets.emit('oh no', data);
 };
-
-var updateStatus = function(data) {
-  io.sockets.emit('mans not hot', data);
-}
 
 server.listen(3000, function () {
   console.log('server running on port 3000');

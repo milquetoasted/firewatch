@@ -42,7 +42,6 @@ io.on('connection', function(socket){
               var lat = output[i][0];
               var lng = output[i][1];
               var d = Math.pow(lat - myLatitude, 2) + Math.pow(lng - myLongitude, 2);
-              console.log(d);
               if (i == 1 || d < min) min = d;
               if (d < dCalculation) {
                 console.log("run run run");

@@ -17,6 +17,8 @@ layers.normal.map,
   center: { lng: -100, lat: 40 }
 });
 
+const LEFT_PADDING = 5;
+
 var mapEvents = new H.mapevents.MapEvents(map);
 
 map.addEventListener('tap', function(evt) {});
@@ -58,9 +60,220 @@ function startClustering(map, data) {
   });
   clusteredDataProvider.addEventListener('tap', function(e) {
     // Log data bound to the marker that has been tapped:
-    console.log(e.target.b)
+    console.log(e.target.b);
   });
 }
+
+var routeLine;
+
+// Define a callback function to process the routing response:
+var onResult = function(result) {
+  var route,
+    routeShape,
+    startPoint,
+    endPoint,
+    linestring;
+  if(result.response.route) {
+  // Pick the first route from the response:
+  route = result.response.route[0];
+  // Pick the route's shape:
+  routeShape = route.shape;
+
+  // Create a linestring to use as a point source for the route line
+  linestring = new H.geo.LineString();
+
+  // Push all the points in the shape into the linestring:
+  routeShape.forEach(function(point) {
+    var parts = point.split(',');
+    linestring.pushLatLngAlt(parts[0], parts[1]);
+  });
+
+  // Retrieve the mapped positions of the requested waypoints:
+  startPoint = route.waypoint[0].mappedPosition;
+  endPoint = route.waypoint[1].mappedPosition;
+
+  // Create a polyline to display the route
+  routeLine = new H.map.Polyline(linestring, {
+    style: { lineWidth: 10 },
+    arrows: { fillColor: 'white', frequency: 2, width: 0.8, length: 0.7 }
+  });
+
+  // Create a marker for the start point:
+  // var startMarker = new H.map.Marker({
+  //   lat: startPoint.latitude,
+  //   lng: startPoint.longitude
+  // });
+
+  // Create a marker for the end point:
+  // var endMarker = new H.map.Marker({
+  //   lat: endPoint.latitude,
+  //   lng: endPoint.longitude
+  // });
+
+  // Add the route polyline and the two markers to the map:
+  map.addObjects([routeLine]);
+
+  // Set the map's viewport to make the whole route visible:
+  // map.setViewBounds(routeLine.getBounds());
+  }
+};
+
+// Get an instance of the routing service:
+var router = platform.getRoutingService();
+
+var destination;
+
+/**
+ * Create a marker that is capable of receiving DOM events and add it
+ * to the map.
+ *
+ * @param  {H.Map} map      A HERE Map instance within the application
+ */
+function addDomMarker(map) {
+  var outerElement = document.createElement('div'),
+      innerElement = document.createElement('div');
+
+  outerElement.style.userSelect = 'none';
+  outerElement.style.webkitUserSelect = 'none';
+  outerElement.style.msUserSelect = 'none';
+  outerElement.style.mozUserSelect = 'none';
+  outerElement.style.cursor = 'pointer';
+
+  // innerElement.style.color = 'red';
+  innerElement.style.backgroundColor = '#FF9800';
+  innerElement.style.border = '1px solid #FAFAFA';
+  // innerElement.style.font = 'normal 12px Karla';
+  // innerElement.style.lineHeight = '12px';
+
+  innerElement.style.borderRadius = '50%';
+  innerElement.style.paddingTop = '2px';
+  innerElement.style.paddingLeft = '4px';
+  innerElement.style.width = '15px';
+  innerElement.style.height = '15px';
+
+  // add negative margin to inner element
+  // to move the anchor to center of the div
+  innerElement.style.marginTop = '-10px';
+  innerElement.style.marginLeft = '-10px';
+
+  outerElement.appendChild(innerElement);
+
+  // Add text to the DOM element
+  // innerElement.innerHTML = 'EC';
+
+  function changeOpacity(evt) {
+    evt.target.style.transform = 'scale(1.1)';
+  }
+
+  function changeOpacityToOne(evt) {
+    evt.target.style.transform = 'scale(1)';
+  }
+
+  //create dom icon and add/remove opacity listeners
+  var domIcon = new H.map.DomIcon(outerElement, {
+    // the function is called every time marker enters the viewport
+    onAttach: function(clonedElement, domIcon, domMarker) {
+      clonedElement.addEventListener('mouseover', changeOpacity);
+      clonedElement.addEventListener('mouseout', changeOpacityToOne);
+    },
+    // the function is called every time marker leaves the viewport
+    onDetach: function(clonedElement, domIcon, domMarker) {
+      clonedElement.removeEventListener('mouseover', changeOpacity);
+      clonedElement.removeEventListener('mouseout', changeOpacityToOne);
+    }
+  });
+
+  for (i=0; i<evacuationCenters.length; i++) {
+    // Marker for evacuation center
+    var evacuationCenterMarker = new H.map.DomMarker(
+      {
+        lat: evacuationCenters[i].LATITUDE,
+        lng: evacuationCenters[i].LONGITUDE
+      },
+      {
+        icon: domIcon
+      });
+    evacuationCenterMarker.setData(i);
+    evacuationCenterMarker.addEventListener('tap', function(evt) {
+      // event target is the marker itself, group is a parent event target
+      // for all objects that it contains
+      for (i=0; i<evacuationCenters.length; i++) {
+        evacuationMarkers[i].setVisibility(true);
+      }
+      var index = this.getData();
+
+      var coords = { lat: evacuationCenters[index].LATITUDE, lng: evacuationCenters[index].LONGITUDE };
+
+      if (destination) {
+        destination.setVisibility(false);
+      }
+      if (routeLine) {
+        routeLine.setVisibility(false);
+      }
+      destination = new H.map.DomMarker(coords, {zIndex: 99999});
+
+      var selectedIndex = 0;
+
+      for (i=0; i<evacuationCenters.length; i++) {
+        if (evacuationCenters[index].SHELTER_NAME === sortedCenters[i].SHELTER_NAME) {
+          selectedIndex = i;
+        }
+      }
+
+      app.selectedCenter = selectedIndex;
+
+      map.addObject(destination);
+
+      this.setVisibility(false);
+
+      var group = new H.map.Group();
+
+      var leftCoordsDest = { lat: evacuationCenters[index].LATITUDE, lng: evacuationCenters[index].LONGITUDE - LEFT_PADDING };
+      var leftCoordsInit = { lat: here.getPosition().lat, lng: here.getPosition().lng - LEFT_PADDING };
+      ghostDestLeft = new H.map.DomMarker(leftCoordsDest);
+      ghostInitLeft = new H.map.DomMarker(leftCoordsInit);
+
+      // add markers to the group
+      group.addObjects([here, destination, ghostDestLeft, ghostInitLeft]);
+      map.addObject(group);
+
+      ghostDestLeft.setVisibility(false);
+      ghostInitLeft.setVisibility(false);
+
+      // get geo bounding box for the group and set it to the map
+      map.setViewBounds(group.getBounds(), true);
+
+      // Create the parameters for the routing request:
+      var routingParameters = {
+        // The routing mode:
+        'mode': 'fastest;car',
+        // The start point of the route:
+        'waypoint0': 'geo!' + here.getPosition().lat + ',' + here.getPosition().lng,
+        // The end point of the route:
+        'waypoint1': 'geo!' + destination.getPosition().lat + ',' + destination.getPosition().lng,
+        // To retrieve the shape of the route we choose the route
+        // representation mode 'display'
+        'representation': 'display'
+      };
+
+      // Call calculateRoute() with the routing parameters,
+      // the callback and an error callback function (called if a
+      // communication error occurs):
+      router.calculateRoute(routingParameters, onResult,
+        function(error) {
+          alert(error.message);
+        });
+
+      var container = document.getElementById('evacuationCentersID');
+      container.scrollTop = 0;
+    });
+    evacuationMarkers.push(evacuationCenterMarker);
+    map.addObject(evacuationCenterMarker);
+  } 
+}
+
+evacuationMarkers = [];
+addDomMarker(map);
 
 var socket = io();
 socket.emit('lit fam');
@@ -77,9 +290,6 @@ var options = {
 // Show traffic tiles
 map.setBaseLayer(layers.normal.traffic);
 
-// Enable traffic incidents layer
-map.addLayer(layers.incidents);
-
 var here;
 
 function positionSuccess(pos) {
@@ -95,9 +305,43 @@ function positionSuccess(pos) {
     map.setCenter(ll, true);
     map.setZoom(8, true);
     here = new H.map.Marker(ll);
+    calculateDistance(here, 'K');
     map.addObject(here);
     reverseGeocode(platform, crd.latitude + ',' + crd.longitude);
   }, 1000);
+}
+
+function distance(lat1, lon1, lat2, lon2, unit) {
+	var radlat1 = Math.PI * lat1/180;
+	var radlat2 = Math.PI * lat2/180;
+	var theta = lon1-lon2;
+	var radtheta = Math.PI * theta/180;
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	if (dist > 1) {
+		dist = 1;
+	}
+	dist = Math.acos(dist);
+	dist = dist * 180/Math.PI;
+	dist = dist * 60 * 1.1515;
+	if (unit=="K") {
+    dist = dist * 1.609344;
+  }
+	if (unit=="N") {
+    dist = dist * 0.8684;
+  }
+	return dist;
+}
+
+function calculateDistance(fromHere) {
+  for (i=0; i<evacuationCenters.length; i++) {
+    evacuationCenters[i].DISTANCE = Math.round(distance(
+      fromHere.getPosition().lat,
+      fromHere.getPosition().lng,
+      evacuationCenters[i].LATITUDE,
+      evacuationCenters[i].LONGITUDE
+    ));
+  }
+  app.doneLoading = true;
 }
 
 function positionError(err) {
@@ -119,6 +363,7 @@ autocomplete.addListener('place_changed', function () {
   map.setCenter(ll, true);
   map.setZoom(8, true);
   here = new H.map.Marker(ll);
+  calculateDistance(here, 'K');
   map.addObject(here);
   reverseGeocode(platform, crd.lat() + ',' + crd.lng());
 });
@@ -195,14 +440,115 @@ function searchNews(location) {
     });
 }
 
+function compareDistances(a, b) {
+  return a.DISTANCE - b.DISTANCE;
+}
+
+var sortedCenters = evacuationCenters.slice();
+
 // initialize vue
 
 var app = new Vue({
   el: '#app',
   data: {
     city: '',
+    routing: false,
+    doneLoading: false,
+    selectedCenter: -1,
     location: '',
     news: []
+  },
+  methods: {
+    getNearbyCenters: function() {
+      if (this.selectedCenter > -1) {
+        sortedCenters = sortedCenters.splice(this.selectedCenter, 1)
+          .concat(sortedCenters.sort(compareDistances));
+        this.selectedCenter = 0;
+      } else {
+        sortedCenters.sort(compareDistances);
+      }
+      return sortedCenters;
+    },
+    setDestination: function(newIndex) {
+      var index = 0;
+
+      for (i=0; i<evacuationCenters.length; i++) {
+        if (evacuationCenters[i].SHELTER_NAME === sortedCenters[newIndex].SHELTER_NAME) {
+          index = i;
+        }
+        evacuationMarkers[i].setVisibility(true);
+      }
+
+      var coords = { lat: evacuationCenters[index].LATITUDE, lng: evacuationCenters[index].LONGITUDE };
+      if (destination) {
+        destination.setVisibility(false);
+      }
+      if (routeLine) {
+        routeLine.setVisibility(false);
+      }
+      destination = new H.map.DomMarker(coords, {zIndex: 99999});
+
+      this.selectedCenter = newIndex;
+
+      map.addObject(destination);
+
+      evacuationMarkers[index].setVisibility(false);
+
+      var group = new H.map.Group();
+
+      var leftCoordsDest = { lat: evacuationCenters[index].LATITUDE, lng: evacuationCenters[index].LONGITUDE - LEFT_PADDING };
+      var leftCoordsInit = { lat: here.getPosition().lat, lng: here.getPosition().lng - LEFT_PADDING };
+      ghostDestLeft = new H.map.DomMarker(leftCoordsDest);
+      ghostInitLeft = new H.map.DomMarker(leftCoordsInit);
+
+      // add markers to the group
+      group.addObjects([here, destination, ghostDestLeft, ghostInitLeft]);
+
+      map.addObject(group);
+
+      ghostDestLeft.setVisibility(false);
+      ghostInitLeft.setVisibility(false);
+
+      // get geo bounding box for the group and set it to the map
+      map.setViewBounds(group.getBounds(), true);
+
+      // Create the parameters for the routing request:
+      var routingParameters = {
+        // The routing mode:
+        'mode': 'fastest;car',
+        // The start point of the route:
+        'waypoint0': 'geo!' + here.getPosition().lat + ',' + here.getPosition().lng,
+        // The end point of the route:
+        'waypoint1': 'geo!' + destination.getPosition().lat + ',' + destination.getPosition().lng,
+        // To retrieve the shape of the route we choose the route
+        // representation mode 'display'
+        'representation': 'display'
+      };
+
+      // Call calculateRoute() with the routing parameters,
+      // the callback and an error callback function (called if a
+      // communication error occurs):
+      router.calculateRoute(routingParameters, onResult,
+        function(error) {
+          alert(error.message);
+        });
+      
+      var container = this.$el.querySelector('#evacuationCentersID');
+      container.scrollTop = 0;
+    }
+  }
+});
+
+var headerApp = new Vue({
+  el: '#headerApp',
+  data: {
+    routing: false
+  },
+  methods: {
+    toggleFunction: function() {
+      this.routing = !this.routing;
+      app.routing = this.routing;
+    }
   }
 });
 
